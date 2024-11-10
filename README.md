@@ -62,29 +62,30 @@ helm install argo argo/argo-workflows
     ```
 
   ### 4. Submit the Workflow
-  
-    Submit the workflow to Argo:
 
-   ```bash
-     kubectl create spark_job.yaml -n <namespace>
-   ```
+Submit the workflow to Argo:
 
-    Check the status of your workflow:
-    
-    ```bash 
-    kubectl get po -n <namespace>
-    ```
+```bash
+kubectl create -f spark-job-workflow.yaml -n <namespace>
+```
 
-    To view logs of a specific job:
-    
-    ```bash
-    kubectl logs <workflow_name> -n <namespace>
-    ```
+Check the status of your workflow:
+
+```bash
+kubectl get po -n <namespace>
+```
+
+To view logs of a specific job:
+
+```bash
+kubectl logs <pod_name> -n <namespace>
+```
 
    ### 5. Verify Job Completion
    
    You can monitor the status of your Spark job and check its logs via Argo's UI or command line:
 
 ## Troubleshooting
-  . Ensure that the Docker image is accessible to the Kubernetes cluster.
-  . Check Spark and Argo logs for any specific errors related to configurations.
+  • Ensure that the Docker image is accessible to the Kubernetes cluster.
+  
+  • Check Spark and Argo logs for any specific errors related to configurations.
