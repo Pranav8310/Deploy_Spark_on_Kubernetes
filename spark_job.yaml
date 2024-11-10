@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: spark-
+  namespace: argo
+spec:
+  serviceAccountName: argo-sa
+  entrypoint: spark-job
+  templates:
+    - name: spark-job
+      steps:
+        - - name: submit-spark-job
+            template: spark-submit
+            
+    - name: spark-submit
+      inputs:
+        parameters:
+          - name: spark-master-url
+            value: "local[*]"
+          - name: spark-deploy-mode
+            value: "client"
+          - name: spark-script
+            value: "/opt/spark/work-dir/spark_pi.py"
+      container:
+        image: pranavhingane/fancy
+        command: ["/opt/spark/bin/spark-submit"]
+        args: 
+          - "--master"
+          - "{{inputs.parameters.spark-master-url}}"
+          - "--deploy-mode"
+          - "{{inputs.parameters.spark-deploy-mode}}"
+          - "{{inputs.parameters.spark-script}}"
+          - "--conf"
+          - "spark.driver.extraJavaOptions=-Divy.cache.dir=/tmp -Divy.home=/tmp"
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
